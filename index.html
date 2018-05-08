@@ -1,0 +1,38 @@
+{% extends 'base.html'%}
+{% block content %}
+    <h1>Welcome to RecipMe</h1>
+    <h2>Sign Up</h2>
+    <form action="{{ url_for('sign_up') }}" method='POST'>
+        <fieldset>
+            <legend>Sign Up</legend>
+            Username: <br>
+            <input type='text' id='username' placeholder='Username' name='username' value=''>
+            <br>
+            First name: <br>
+            <input type='text' id='first' placeholder='First Name' name='first' value=''>
+            <br>
+            Last name: <br>
+            <input type='text' id='last' placeholder='Last Name' name='last' value=''>
+            <br>
+            Password: <br>
+            <input type='password' id='password' placeholder='Password' name='password' value=''>
+            <br>
+            <input type='submit' value='Sign Up'>
+        </fieldset>
+    </form>
+    <br>
+    <h2>Login</h2>
+    <form action="{{ url_for('login') }}" method='POST'>
+        <fieldset>
+            <legend>Login Details</legend>
+            Username: <br>
+            <input type='text' id='username' placeholder='Username' name='username'>
+            <br>
+            Password: <br>
+            <input type='password' id='password' placeholder='Password' name='password'>
+            <br>
+            <input type='submit' value='Login'>
+        </fieldset>
+    </form>
+</body>
+{% endblock %}
