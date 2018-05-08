@@ -58,7 +58,6 @@ class Method(db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
-print(User.query.filter_by(username='benhasselgr').first())
+peter = User.query.filter_by(username='benhasselgren').first()
 
-
-
+print(peter.userId)
