@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css" />
 
     <title>Document</title>
@@ -16,8 +16,59 @@
 </head>
 
 <body>
+    <div class="container">
 	{% block content %}
     {% endblock %}
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+    <script type="text/javascript">
+        // Class to represent a row in the seat reservations grid
+
+    $(document).ready(function() {
+        $('input#name, textarea#description, textarea#origin, textarea#step').characterCounter();
+        $('select').formSelect();
+        
+    });
+
+    $('.chips-initial').chips({
+        data: [{
+          tag: 'Example',
+        }, {
+          tag: 'ingredient'
+        }],
+    });
+
+    
+
+    /*
+    console.log(instance.chipsData);
+    $.post( "/postmethod", {
+        javascript_data: data 
+    });
+    */
+
+    $( "#option_amount" ).change( function() {
+        $('.stepFields').empty();
+        var limit = parseInt($("#option_amount").val());
+        console.log(limit);
+        for(var i = 1; i < limit + 1; i++){
+            $('.stepFields').append('<div class="input-field col s12">\
+                    <textarea id="step" name="step" class="materialize-textarea" data-length="300"></textarea>\
+                    <label for="description">Step ' + i +'</label>\
+                </div>');
+        }
+    });
+
+    function submitForm() {
+        var ingredients = M.Chips.getInstance($('.chips-initial'));
+        console.log(ingredients);
+        var data = ingredients.chipsData.map(function (o) {return o.tag;}).join(",");
+        console.log(data);
+        $('#ingredients-list').val(data);
+        $('#recipe-form').submit();
+    }
+    </script>
 </body>
 
 </html>

@@ -1,13 +1,9 @@
-import os
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-
-
 """-------------------------------DB CONFIG--------------------------------"""
-
-app = Flask(__name__)
-app.config.from_pyfile('settings.cfg')
-db = SQLAlchemy(app)
+#app = Flask(__name__)
+#app.config.from_pyfile('settings.cfg')
+db = SQLAlchemy();
 
 class User(db.Model):
     userId = db.Column(db.Integer, primary_key=True)
@@ -18,7 +14,6 @@ class User(db.Model):
     password = db.Column(db.String(50), unique=False, nullable=False)
     #Relationships
     recipe = db.relationship('Recipe', backref='user', lazy=True)
-    ingredient = db.relationship('Ingredient', backref='user', lazy=True)
 
 class Recipe(db.Model):
     recipeId = db.Column(db.Integer, primary_key=True)
@@ -31,16 +26,15 @@ class Recipe(db.Model):
     #Foreign Key
     user_id = db.Column(db.Integer, db.ForeignKey('user.userId'), nullable=False)
     #Relationships  
-    ingredient = db.relationship('Ingredient', backref='recipe', lazy=True)
-    rating = db.relationship('Rating', backref='recipe', lazy=True)
-    recipe = db.relationship('Method', backref='recipe', lazy=True)
+    ingredients = db.relationship('Ingredient', backref='recipe', lazy=True)
+    ratings = db.relationship('Rating', backref='recipe', lazy=True)
+    methods = db.relationship('Method', backref='recipe', lazy=True)
 
 class Ingredient(db.Model):
     ingredientId = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), unique=False, nullable=False)
     #Foreign Key
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.recipeId'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.userId'), nullable=False)
 
 class Rating(db.Model):
     ratingId = db.Column(db.Integer, primary_key=True)
@@ -57,7 +51,16 @@ class Method(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.username
+"""
+db.drop_all()
+db.create_all()
 
-peter = User.query.filter_by(username='benhasselgren').first()
+            last='Hasselgren',
+             username='benhasselgren',
+             email='admin@example.com',
+             password='lol')
 
-print(peter.userId)
+db.session.add(admin)
+db.session.commit()
+"""
+
