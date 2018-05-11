@@ -26,6 +26,8 @@ def add_user(user_values):
 def send_recipe(user_recipe, username):
     user = User.query.filter_by(username=username).first()
     methods = user_recipe.getlist('step')
+    methodNumber = 1
+    ingredNumber = 1
 
 
     recipe = Recipe(name=user_recipe['name'], 
@@ -64,6 +66,11 @@ def update_recipe(user_recipe, username):
     methodNumber = 1
     ingredNumber = 1
     methodsGot = user_recipe.getlist('step')
+
+    for method in methods:
+        db.session.delete(method)
+    for ingredient in ingredients:
+        db.session.delete(ingredient)
     
     #db.session.delete(ingredients)
 
@@ -76,21 +83,21 @@ def update_recipe(user_recipe, username):
     recipe.user_id=user.userId
     db.session.commit()
 
-    methods = user_recipe.getlist('step')
+    methodsGot = user_recipe.getlist('step')
     recipe.methods = []
  
     
 
-    for method in methods:
-        method1 = Method(stepNumber=methodNumber, description=method)
+    for methodGot in methodsGot:
+        method1 = Method(stepNumber=methodNumber, description=methodGot)
         recipe.methods.append(method1); 
         methodNumber += 1
 
     recipe.ingredients = []
-    ingredients = user_recipe['edit_ingredients-list'].split(',')
+    ingredientsGot = user_recipe['ingredients-list'].split(',')
 
-    for ingredient in ingredients:
-        ingredient1 = Ingredient(name=ingredient) 
+    for ingredientGot in ingredientsGot:
+        ingredient1 = Ingredient(name=ingredientGot) 
         recipe.ingredients.append(ingredient1); 
         ingredNumber += 1
 
@@ -130,6 +137,17 @@ def search_user_ingredients(recipeId):
 
 def get_recipe(recipeId):
     return Recipe.query.filter_by(recipeId= recipeId).first()
+
+def delete_recipe_from_db(recipe, methods, ingredients):
+
+    for method in methods:
+        db.session.delete(method)
+    for ingredient in ingredients:
+        db.session.delete(ingredient)
+
+    db.session.delete(recipe)
+
+    db.session.commit()
 
 
 """---------------------------------ROUTES FOR SIGNING UP AND LOGGING IN---------------------------------"""
@@ -182,6 +200,7 @@ def delete_recipe(username, recipeId):
     recipe = get_recipe(recipeId)
     methods = search_user_methods(recipeId)
     ingredients = search_user_ingredients(recipeId)
+    delete_recipe_from_db(recipe, methods, ingredients)
     return redirect('my_cookbook/%s'% username)
 
 @app.route('/<username>/add_recipe')

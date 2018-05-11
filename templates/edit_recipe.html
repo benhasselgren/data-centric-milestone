@@ -3,23 +3,24 @@
     <h1>Add a recipe</h1>
 <h2>Recipe</h2>
 <div class="col s12">
-    <form class="col s12" action="{{ url_for('recipe_updated', username=username, recipeId=recipeId) }}" method='POST' id='edit_recipe_form'>
+    <form class="col s12" action="{{ url_for('recipe_updated', username=username, recipeId=recipeId) }}" method='POST' id='recipe_form'>
         <div class="row">
             <div class="input-field col s12">
-                <input value="{{ recipe.name }}" id="edit_name" name="name" type="text" class="validate" data-length="30">
+                <input value="{{ recipe.name }}" id="name" name="name" type="text" class="validate" data-length="30">
                 <label class="active" for="name">Name</label>
             </div>
       </div>
         <div class="row">
             <div class="input-field col s12">
-                <textarea id="edit_description" name="description" class="materialize-textarea" data-length="500"></textarea>
+                <textarea id="description" name="description" class="materialize-textarea" data-length="500"></textarea>
                 <label for="description">Description</label>
             </div>
         </div>
         <div class="row">
+        <div class="row">
             <p class="range-field">
                 <label for="cookingTime">Cooking time <strong>(minutes)</strong></label>
-                <input value="{{ recipe.cookingtime }}" id="edit_cookingTime" name="cookingtime" type="range" min="0" max="300" />
+                <input  value ="{{ recipe.cookingtime }}"id="cookingTime" name="cookingtime" type="range" min="0" max="300" />
             </p>
         </div>
         <div class="row">
@@ -52,18 +53,18 @@
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <input value="{{ recipe.countryOfOrigin }}" id="edit_origin" name="origin" type="text" class="validate" data-length="30"/>
+                <input value="{{ recipe.countryOfOrigin }}" id="origin" name="origin" type="text" class="validate" data-length="30"/>
                 <label for="origin">Country of origin</label>
             </div>
         </div>
         <div class="row">
             <label for="ingredients">Enter ingredients</label>
-            <div id="edit_ingredients" name="ingredients" class="chips chips-initial-edit"></div>
-            <input id="edit_ingredients-list" name="ingredients-list" type="text" style="visibility: hidden" />
+            <div id="ingredients" name="ingredients" class="chips chips-initial"></div>
+            <input id="ingredients-list" name="ingredients-list" type="text" style="visibility: hidden" />
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <select name="option_amount" id="edit_option_amount">
+                <select name="option_amount" id="option_amount">
                     <option name="stepAmount" selected>{{ counter }}</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -88,27 +89,29 @@
         </div>
     </form> 
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
 <script>
 
 $(document).ready(function() {
-    i=1
+    i=1;
     $('select').formSelect();
-    $("textarea#edit_description").val('{{ recipe.description }}');
-    $('input#edit_name, textarea#edit_description, textarea#edit_origin, textarea#edit_step').characterCounter();
+    $("textarea#description").val('{{ recipe.description }}');
+    $('input#name, textarea#description, textarea#origin, textarea#step').characterCounter();
     update_steps();
     {% for method in methods %}
-    $('#{{ method.stepNumber }}').val('{{ method.description }}')
-    i ++
+    $('#{{ method.stepNumber }}').val('{{ method.description }}');
+    i ++;
     {% endfor %}
         
 });
 
-$( "#edit_option_amount" ).change( function() {
+$( "#option_amount" ).change( function() {
     update_steps();
 
 });
 
-$('.chips-initial-edit').chips({
+$('.chips-initial').chips({
         data: [
         {% for ingredient in ingredients %}
         {
@@ -120,7 +123,7 @@ $('.chips-initial-edit').chips({
       
 function update_steps(){
     $('.stepFields').empty();
-        var limit = parseInt($("#edit_option_amount").val());
+        var limit = parseInt($("#option_amount").val());
         console.log(limit);
         for(var i = 1; i < limit + 1; i++){
             $('.stepFields').append('<div class="input-field col s12">\
@@ -132,12 +135,12 @@ function update_steps(){
 }  
 
     function submitForm() {
-        var ingredients = M.Chips.getInstance($('.chips-initial-edit'));
+        var ingredients = M.Chips.getInstance($('.chips-initial'));
         console.log(ingredients);
         var data = ingredients.chipsData.map(function (o) {return o.tag;}).join(",");
         console.log(data);
-        $('#edit_ingredients-list').val(data);
-        $('#edit_recipe_form').submit();
+        $('#ingredients-list').val(data);
+        $('#recipe_form').submit();
     }
 
 
