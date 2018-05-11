@@ -25,9 +25,6 @@ def add_user(user_values):
 
 def send_recipe(user_recipe, username):
     user = User.query.filter_by(username=username).first()
-    methodNumber = 1
-    ingredNumber = 1
-    print(user_recipe.items(), file=sys.stderr)
     methods = user_recipe.getlist('step')
 
 
@@ -39,7 +36,6 @@ def send_recipe(user_recipe, username):
                     countryOfOrigin=user_recipe['origin'],
                     user_id=user.userId)
     db.session.add(recipe)
-    #ingredient = Ingredient(name=user_recipe[""])
 
     recipe.methods = []
  
@@ -48,7 +44,6 @@ def send_recipe(user_recipe, username):
     for method in methods:
         method1 = Method(stepNumber=methodNumber, description=method)
         recipe.methods.append(method1); 
-        #db.session.add(method1)
         methodNumber += 1
 
     recipe.ingredients = []
@@ -61,6 +56,39 @@ def send_recipe(user_recipe, username):
 
     db.session.commit()
     
+def update_recipe(user_recipe, username):
+    user = search_for_existing(username)
+    recipe = Recipe.query.filter_by(user_id = user.userId).first()
+    methods = Method.query.filter_by(recipe_id = recipe.recipeId).all()
+    ingredients = Ingredient.query.filter_by(recipe_id = recipe.recipeId).all()
+    methodNumber = 1
+    ingredNumber = 1
+    methodsGot = user_recipe.getlist('step')
+
+
+    recipe.name=user_recipe['name'], 
+    recipe.description=user_recipe['description'], 
+    recipe.cookingtime=user_recipe['cookingtime'], 
+    recipe.servings=user_recipe['servings'], 
+    recipe.course=user_recipe['course'], 
+    recipe.countryOfOrigin=user_recipe['origin'],
+    recipe.user_id=user.userId
+    db.session.commit()
+
+    for x in range(1, len(methodsGot)):
+        if methodsGot[x]!="":
+            if methodsGot[x]!= methods[x].description
+                methods[x].stepNumber=x
+                methods[x].description=methodsGot[x]
+                db.session.commit()
+
+    ingredientsGot = user_recipe['ingredients-list'].split(',')
+
+    for x in range(1, len(ingredientsGot)):
+        ingredients[x].name=ingredientsGot[x]
+        db.session.commit()
+
+   
 
 
 
@@ -79,6 +107,22 @@ def user_login(user_values):
                 return True
     else:
         return False
+
+def search_user_recipes(username):
+    user = User.query.filter_by(username=username).first()
+    return Recipe.query.filter_by(user_id= user.userId).all()
+
+def search_user_methods(recipeId):
+    #user = User.query.filter_by(username=username).first()
+    return Method.query.filter_by(recipe_id=recipeId).all()
+
+def search_user_ingredients(recipeId):
+   # recipe = Recipe.query.filter_by(username=username).first()
+    return Ingredient.query.filter_by(recipe_id=recipeId).all()
+
+def get_recipe(recipeId):
+    return Recipe.query.filter_by(recipeId= recipeId).first()
+
 
 """---------------------------------ROUTES FOR SIGNING UP AND LOGGING IN---------------------------------"""
 
@@ -114,7 +158,8 @@ def login():
 
 @app.route('/my_cookbook/<username>')
 def my_cookbook(username):
-    return render_template('my_cookbook.html', username=username)
+    recipes = search_user_recipes(username)
+    return render_template('my_cookbook.html', username=username, recipes=recipes)
 
 @app.route('/<username>/add_recipe')
 def add_recipe(username):
@@ -124,8 +169,24 @@ def add_recipe(username):
 def recipe_created(username):
     if request.method == 'POST':
         recipe = request.form
-        print(recipe, file=sys.stderr)
         send_recipe(recipe, username)
+        return redirect('my_cookbook/%s'% username) 
+
+@app.route('/<username>/<recipeId>/edit_recipe')
+def edit_recipe(username, recipeId):
+    counter=0
+    recipe = get_recipe(recipeId)
+    methods = search_user_methods(recipeId)
+    ingredients = search_user_ingredients(recipeId)
+    for method in methods:
+        counter += 1
+    return render_template('edit_recipe.html', username=username, recipe=recipe, methods=methods, ingredients=ingredients, counter=counter)
+
+@app.route('/<username>/edit_recipe/recipe_updated', methods=['POST'])
+def recipe_updated(username):
+    if request.method == 'POST':
+        recipe = request.form
+        update_recipe(recipe, username)
         return redirect('my_cookbook/%s'% username) 
 
 if __name__ == '__main__':

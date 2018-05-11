@@ -54,7 +54,8 @@ class Method(db.Model):
 """
 db.drop_all()
 db.create_all()
-
+admin = User(
+            first='Ben',
             last='Hasselgren',
              username='benhasselgren',
              email='admin@example.com',
