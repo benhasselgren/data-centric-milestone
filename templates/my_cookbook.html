@@ -1,10 +1,15 @@
 {% extends 'base.html'%}
 {% block content %}
 
-<h1>My Recipes</h1>
-<p>Hello {{ username }}!</p>
+<div class="row">
+	<h3>My Recipes</h3>
+</div>
 
-<a class="waves-effect waves-light btn" href="{{ url_for('add_recipe', username=username) }}"><i class="material-icons right">add_circle</i>Add recipe</a>
+<div class="row">
+	<a class="waves-effect waves-light btn" href="{{ url_for('add_recipe', username=username) }}"><i class="material-icons right">add_circle</i>Add recipe</a>
+</div>
+
+
 
 <div class="row">
 {% for recipe in recipes %}
@@ -13,17 +18,34 @@
         <div class="card-image">
           <img src="http://cdn-image.travelandleisure.com/sites/default/files/styles/1600x1000/public/blue0517.jpg?itok=V3825voJ">
           <span class="card-title">{{ recipe.name }}</span>
-          <a class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+          <a href="{{ url_for('view_recipe', username=username, recipeId= recipe.recipeId) }}" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
         </div>
         <div class="card-content">
           <p>{{ recipe.description }}</p>
         </div>
         <div class="card-action">
           <a href="{{ url_for('edit_recipe', username=username, recipeId= recipe.recipeId)  }}" class="waves-effect waves-light btn green"><i class="material-icons left">border_color</i>Edit</a>
-          <a href="{{ url_for('edit_recipe', username=username, recipeId= recipe.recipeId) }}" class="waves-effect waves-light btn red"><i class="material-icons left">cancel</i>Delete</a>
+          <a  class="waves-effect waves-light btn modal-trigger red" href="#modal1"><i class="material-icons left">cancel</i>Delete</a>
         </div>
       </div>
     </div>
+    <!--MODALS-->
+  <!-- Modal Structure -->
+<div id="modal1" class="modal">
+    <div class="modal-content">
+      <h4>Are you sure you want to delete?</h4>
+    </div>
+    <div class="modal-footer">
+      <a href="{{ url_for('delete_recipe', username=username, recipeId= recipe.recipeId) }}" class="modal-close waves-effect waves-green btn-flat">Yes</a>
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat modal-close">No</a>
+    </div>
+</div>
   {% endfor %}
 </div>
+
+<script type="">
+	$(document).ready(function(){
+    	$('.modal').modal();
+	});
+</script>
 {% endblock %}

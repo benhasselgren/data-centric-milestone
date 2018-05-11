@@ -64,7 +64,8 @@ def update_recipe(user_recipe, username):
     methodNumber = 1
     ingredNumber = 1
     methodsGot = user_recipe.getlist('step')
-
+    
+    #db.session.delete(ingredients)
 
     recipe.name=user_recipe['name'], 
     recipe.description=user_recipe['description'], 
@@ -75,18 +76,25 @@ def update_recipe(user_recipe, username):
     recipe.user_id=user.userId
     db.session.commit()
 
-    for x in range(1, len(methodsGot)):
-        if methodsGot[x]!="":
-            if methodsGot[x]!= methods[x].description
-                methods[x].stepNumber=x
-                methods[x].description=methodsGot[x]
-                db.session.commit()
+    methods = user_recipe.getlist('step')
+    recipe.methods = []
+ 
+    
 
-    ingredientsGot = user_recipe['ingredients-list'].split(',')
+    for method in methods:
+        method1 = Method(stepNumber=methodNumber, description=method)
+        recipe.methods.append(method1); 
+        methodNumber += 1
 
-    for x in range(1, len(ingredientsGot)):
-        ingredients[x].name=ingredientsGot[x]
-        db.session.commit()
+    recipe.ingredients = []
+    ingredients = user_recipe['edit_ingredients-list'].split(',')
+
+    for ingredient in ingredients:
+        ingredient1 = Ingredient(name=ingredient) 
+        recipe.ingredients.append(ingredient1); 
+        ingredNumber += 1
+
+    db.session.commit()
 
    
 
@@ -160,6 +168,21 @@ def login():
 def my_cookbook(username):
     recipes = search_user_recipes(username)
     return render_template('my_cookbook.html', username=username, recipes=recipes)
+
+@app.route('/<username>/<recipeId>/view_recipe')
+def view_recipe(username, recipeId):
+    counter=1
+    recipe = get_recipe(recipeId)
+    methods = search_user_methods(recipeId)
+    ingredients = search_user_ingredients(recipeId)
+    return render_template('view_recipe.html',  username=username, recipe=recipe, methods=methods, ingredients=ingredients, counter=counter)
+
+@app.route('/<username>/<recipeId>/delete_recipe')
+def delete_recipe(username, recipeId):
+    recipe = get_recipe(recipeId)
+    methods = search_user_methods(recipeId)
+    ingredients = search_user_ingredients(recipeId)
+    return redirect('my_cookbook/%s'% username)
 
 @app.route('/<username>/add_recipe')
 def add_recipe(username):
