@@ -3,28 +3,28 @@
     <h1>Add a recipe</h1>
 <h2>Recipe</h2>
 <div class="col s12">
-    <form class="col s12" action="{{ url_for('recipe_created', username=username) }}" method='POST' id='recipe-form'>
+    <form class="col s12" action="{{ url_for('recipe_created', username=username) }}" method='POST' id='recipe-form' >
         <div class="row">
             <div class="input-field col s12">
-                <input id="name" name="name" type="text" class="validate" data-length="30">
+                <input required id="name" name="name" type="text" data-length="30" class="validate">
                 <label class="active" for="name">Name</label>
             </div>
       </div>
         <div class="row">
             <div class="input-field col s12">
-                <textarea id="description" name="description" class="materialize-textarea" data-length="500"></textarea>
+                <textarea id="description" name="description" class="materialize-textarea validate" required="" data-length="500" ></textarea>
                 <label for="description">Description</label>
             </div>
         </div>
         <div class="row">
             <p class="range-field">
                 <label for="cookingTime">Cooking time <strong>(minutes)</strong></label>
-                <input type="range"  name="cookingtime"  min="0" max="300" />
+                <input type="range"  name="cookingtime"  min="0" max="300"/>
             </p>
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <select name="servings">
+                <select required id="servings" name="servings" class="validate">
                     <option value="" disabled selected>Enter an option</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -41,7 +41,7 @@
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <select name="course">
+                <select required id="course" name="course"  class="validate">
                     <option value="" disabled selected>Enter an option</option>
                     <option value="starter">Starter</option>
                     <option value="main">Main</option>
@@ -52,19 +52,19 @@
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <textarea id="origin" name="origin" class="materialize-textarea" data-length="30"></textarea>
+                <textarea required id="origin" name="origin" class="materialize-textarea validate" data-length="30" ></textarea>
                 <label for="origin">Country of origin</label>
             </div>
         </div>
         <div class="row">
             <label for="ingredients">Enter ingredients</label>
-            <div id="ingredients" name="ingredients" class="chips chips-initial"></div>
-            <input id="ingredients-list" name="ingredients-list" type="text" style="visibility: hidden" />
+            <div id="ingredients" name="ingredients" class="chips chips-initial validate" ></div>
+            <input required id="ingredients-list" name="ingredients-list" type="text" style="visibility: hidden"/>
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <select name="option_amount" id="option_amount">
-                    <option name="stepAmount" value="" disabled selected>Enter an option</option>
+                <select name="option_amount" id="option_amount"  class="validate">
+                    <option required name="stepAmount" value="" disabled selected>Enter an option</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -81,8 +81,8 @@
         <div class="row stepFields">
             
         </div>
-        <div class="row">
-            <button class="btn waves-effect waves-light" type="button" sadsadsadname="action" onclick="submitForm()">Create recipe
+        <div class="row input-field">
+            <button class="btn waves-effect waves-light" type="button" class="validate" onclick="submitForm()">Create recipe
             <i class="material-icons right">playlist_add</i>
             </button>
         </div>
@@ -97,9 +97,8 @@
     $(document).ready(function() {
         $('input#name, textarea#description, textarea#origin, textarea#step').characterCounter();
         $('select').formSelect();
-        
-        
     });
+
 
     $('.chips-initial').chips({
         data: [{
@@ -127,7 +126,16 @@
         var data = ingredients.chipsData.map(function (o) {return o.tag;}).join(",");
         console.log(data);
         $('#ingredients-list').val(data);
-        $('#recipe-form').submit();
+
+        var isValidForm = $('#recipe-form')[0].checkValidity();
+        if (isValidForm)
+        {
+            $('#recipe-form').submit();
+        }
+        else
+        {
+            return false;
+        }
     }
 
     </script>

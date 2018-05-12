@@ -6,13 +6,13 @@
     <form class="col s12" action="{{ url_for('recipe_updated', username=username, recipeId=recipeId) }}" method='POST' id='recipe_form'>
         <div class="row">
             <div class="input-field col s12">
-                <input value="{{ recipe.name }}" id="name" name="name" type="text" class="validate" data-length="30">
+                <input value="{{ recipe.name }}" id="name" name="name" type="text" class="validate" data-length="30" required>
                 <label class="active" for="name">Name</label>
             </div>
       </div>
         <div class="row">
             <div class="input-field col s12">
-                <textarea id="description" name="description" class="materialize-textarea" data-length="500"></textarea>
+                <textarea id="description" name="description" class="materialize-textarea" data-length="500" required></textarea>
                 <label for="description">Description</label>
             </div>
         </div>
@@ -20,12 +20,12 @@
         <div class="row">
             <p class="range-field">
                 <label for="cookingTime">Cooking time <strong>(minutes)</strong></label>
-                <input  value ="{{ recipe.cookingtime }}"id="cookingTime" name="cookingtime" type="range" min="0" max="300" />
+                <input  value ="{{ recipe.cookingtime }}"id="cookingTime" name="cookingtime" type="range" min="0" max="300" required/>
             </p>
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <select name="servings">
+                <select name="servings" required>
                     <option selected">{{ recipe.servings }}</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -42,7 +42,7 @@
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <select name="course">
+                <select name="course" required>
                     <option selected>{{ recipe.course.capitalize() }}</option>
                     <option value="starter">Starter</option>
                     <option value="main">Main</option>
@@ -53,19 +53,19 @@
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <input value="{{ recipe.countryOfOrigin }}" id="origin" name="origin" type="text" class="validate" data-length="30"/>
+                <input value="{{ recipe.countryOfOrigin }}" id="origin" name="origin" type="text" class="validate" data-length="30" required/>
                 <label for="origin">Country of origin</label>
             </div>
         </div>
         <div class="row">
             <label for="ingredients">Enter ingredients</label>
             <div id="ingredients" name="ingredients" class="chips chips-initial"></div>
-            <input id="ingredients-list" name="ingredients-list" type="text" style="visibility: hidden" />
+            <input id="ingredients-list" name="ingredients-list" type="text" style="visibility: hidden" required/>
         </div>
         <div class="row">
             <div class="input-field col s12">
                 <select name="option_amount" id="option_amount">
-                    <option name="stepAmount" selected>{{ counter }}</option>
+                    <option name="stepAmount" selected required>{{ counter }}</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -103,6 +103,7 @@ $(document).ready(function() {
     $('#{{ method.stepNumber }}').val('{{ method.description }}');
     i ++;
     {% endfor %}
+    setTimeout(function(){ $('.input-field label').addClass('active'); }, 1);
         
 });
 
@@ -127,7 +128,7 @@ function update_steps(){
         console.log(limit);
         for(var i = 1; i < limit + 1; i++){
             $('.stepFields').append('<div class="input-field col s12">\
-                    <textarea id="'+ i +'" name="step" class="materialize-textarea" data-length="300"></textarea>\
+                    <textarea id="'+ i +'" name="step" class="materialize-textarea active" data-length="300"></textarea>\
                     <label for="description">Step ' + i +'</label>\
                 </div>');
     };
