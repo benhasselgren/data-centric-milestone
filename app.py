@@ -12,8 +12,9 @@ import sys
 app = Flask(__name__)
 app.config.from_pyfile('settings.cfg')
 db.init_app(app)
-"""---------------------------------FUNCTIONS---------------------------------"""
+"""---------------------------------FUNCTIONS TO BE MOVED INTO CLASSES IN SEPERATE FILES---------------------------------"""
 
+"""---------------------------------Users---------------------------------"""
 def add_user(user_values):
     user = User(first=user_values['first'], 
                 last=user_values['last'], 
@@ -22,6 +23,30 @@ def add_user(user_values):
                 password=user_values['password'])
     db.session.add(user)
     db.session.commit()
+
+"""---------------------------------Browse recipes---------------------------------"""
+
+def search_recipes(recipe):
+    cookingTime=recipe['cookingTime']
+    servings=recipe['servings']
+    course=recipe['course']
+    origin=recipe['origin']
+    ingredients = recipe['ingredients-list'].split(',')
+    filters = []
+
+    query = Recipe.query.join(Recipe.ingredients).filter(Recipe.cookingtime== cookingTime,
+                                                         Recipe.servings== servings,
+                                                         Recipe.course== course,
+                                                         Recipe.countryOfOrigin== origin,
+                                                         Ingredient.name.in_( ingredients)).all()
+
+
+
+    return query
+
+
+
+"""--------------------------------- Add/edit recipes---------------------------------"""
 
 def send_recipe(user_recipe, username):
     user = User.query.filter_by(username=username).first()
@@ -105,7 +130,7 @@ def update_recipe(user_recipe, username):
 
    
 
-
+"""---------------------------------queries---------------------------------"""
 
 def search_for_existing(username):
     return User.query.filter_by(username=username).first()
@@ -126,6 +151,8 @@ def user_login(user_values):
 def search_user_recipes(username):
     user = User.query.filter_by(username=username).first()
     return Recipe.query.filter_by(user_id= user.userId).all()
+
+
 
 def search_user_methods(recipeId):
     #user = User.query.filter_by(username=username).first()
@@ -186,6 +213,23 @@ def login():
 def my_cookbook(username):
     recipes = search_user_recipes(username)
     return render_template('my_cookbook.html', username=username, recipes=recipes)
+
+@app.route('/<username>/query_recipes')
+def query_recipes(username):
+    return render_template('query_recipes.html',  username=username)
+
+@app.route('/<username>/queried_recipes',  methods=['POST'])
+def queried_recipes(username):
+    if request.method == 'POST':
+        recipe = request.form
+        recipes = search_recipes(recipe)
+        return render_template('browse_recipes.html',  username=username, recipes=recipes)
+
+@app.route('/<username>/browse_recipes')
+def browse_recipes(username):
+    counter=1
+    recipes = search_recipes(username)
+    return render_template('browse_recipes.html',  username=username, recipes=recipes)
 
 @app.route('/<username>/<recipeId>/view_recipe')
 def view_recipe(username, recipeId):

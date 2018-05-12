@@ -12,7 +12,7 @@
       </div>
         <div class="row">
             <div class="input-field col s12">
-                <textarea id="description" name="description" class="materialize-textarea" data-length="500" required></textarea>
+                <textarea  id="description" name="description" class="materialize-textarea" data-length="500" required></textarea>
                 <label for="description">Description</label>
             </div>
         </div>
@@ -20,7 +20,7 @@
         <div class="row">
             <p class="range-field">
                 <label for="cookingTime">Cooking time <strong>(minutes)</strong></label>
-                <input  value ="{{ recipe.cookingtime }}"id="cookingTime" name="cookingtime" type="range" min="0" max="300" required/>
+                <input   value ="{{ recipe.cookingtime }}"id="cookingTime" name="cookingtime" type="range" min="0" max="300" required/>
             </p>
         </div>
         <div class="row">
@@ -46,7 +46,7 @@
                     <option selected>{{ recipe.course.capitalize() }}</option>
                     <option value="starter">Starter</option>
                     <option value="main">Main</option>
-                    <option value="desert">Desert</option>
+                    <option value="dessert">Dessert</option>
                 </select>
                 <label>Type of course</label>
             </div>
@@ -141,7 +141,16 @@ function update_steps(){
         var data = ingredients.chipsData.map(function (o) {return o.tag;}).join(",");
         console.log(data);
         $('#ingredients-list').val(data);
-        $('#recipe_form').submit();
+
+        var isValidForm = $('#recipe-form')[0].checkValidity();
+        if (isValidForm)
+        {
+            $('#recipe-form').submit();
+        }
+        else
+        {
+            return false;
+        }
     }
 
 

@@ -8,8 +8,9 @@
 <div class="row">
 	<a class="waves-effect waves-light btn" href="{{ url_for('add_recipe', username=username) }}"><i class="material-icons right">add_circle</i>Add recipe</a>
 </div>
-
-
+<div class="row">
+  <a class="waves-effect waves-light btn blue" href="{{ url_for('query_recipes', username=username) }}"><i class="material-icons right">search</i>Search recipes</a>
+</div>
 
 <div class="row">
 {% for recipe in recipes %}
@@ -43,6 +44,7 @@
   {% endfor %}
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
 <script type="">
 	$(document).ready(function(){
     	$('.modal').modal();
