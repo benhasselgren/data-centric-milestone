@@ -34,18 +34,29 @@ def search_recipes(recipe):
     ingredients = recipe['ingredients-list'].split(',')
     filters = []
 
-    query = Recipe.query.join(Recipe.ingredients).filter(Recipe.cookingtime== cookingTime,
-                                                         Recipe.servings== servings,
-                                                         Recipe.course== course,
-                                                         Recipe.countryOfOrigin== origin,
-                                                         Ingredient.name.in_( ingredients)).all()
+    if cookingTime != "":
+        filters.append(Recipe.cookingtime==cookingTime)
+        
+    if servings != "":
+        filters.append(Recipe.servings==servings)
+        
+    if course != "":
+       filters.append(Recipe.course==course)
+        
+    if origin != "":
+        filters.append(Recipe.countryOfOrigin==origin)
+        
+    if ingredients != [""]:
+       filters.append( Ingredient.name.in_( ingredients))
+
+    filter_group =tuple(filters)
+
+    query = Recipe.query.join(Recipe.ingredients).filter(*filter_group).all()
 
 
 
     return query
-
-
-
+ 
 """--------------------------------- Add/edit recipes---------------------------------"""
 
 def send_recipe(user_recipe, username):
@@ -223,6 +234,7 @@ def queried_recipes(username):
     if request.method == 'POST':
         recipe = request.form
         recipes = search_recipes(recipe)
+        print(recipes, file=sys.stderr)
         return render_template('browse_recipes.html',  username=username, recipes=recipes)
 
 @app.route('/<username>/browse_recipes')

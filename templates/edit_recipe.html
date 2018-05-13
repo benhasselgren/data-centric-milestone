@@ -1,18 +1,21 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
 {% block content %}
-    <h1>Add a recipe</h1>
+<div class="row">
+    <h1>Edit recipe</h1>
+</div>
+
 <h2>Recipe</h2>
 <div class="col s12">
     <form class="col s12" action="{{ url_for('recipe_updated', username=username, recipeId=recipeId) }}" method='POST' id='recipe_form'>
         <div class="row">
             <div class="input-field col s12">
-                <input value="{{ recipe.name }}" id="name" name="name" type="text" class="validate" data-length="30" required>
+                <input value="{{ recipe.name }}" id="name" name="name" type="text" class="validate" data-length="30" required/>
                 <label class="active" for="name">Name</label>
             </div>
       </div>
         <div class="row">
             <div class="input-field col s12">
-                <textarea  id="description" name="description" class="materialize-textarea" data-length="500" required></textarea>
+                <textarea  id="description" name="description" class="materialize-textarea validate" data-length="500" required></textarea>
                 <label for="description">Description</label>
             </div>
         </div>
@@ -20,13 +23,13 @@
         <div class="row">
             <p class="range-field">
                 <label for="cookingTime">Cooking time <strong>(minutes)</strong></label>
-                <input   value ="{{ recipe.cookingtime }}"id="cookingTime" name="cookingtime" type="range" min="0" max="300" required/>
+                <input   value ="{{ recipe.cookingtime }}"id="cookingTime" name="cookingtime" type="range" min="0" max="300"  class="validate"required/>
             </p>
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <select name="servings" required>
-                    <option selected">{{ recipe.servings }}</option>
+                <select name="servings" class="validate" required>
+                    <option selected>{{ recipe.servings }}</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -42,7 +45,7 @@
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <select name="course" required>
+                <select name="course" class="validate" required>
                     <option selected>{{ recipe.course.capitalize() }}</option>
                     <option value="starter">Starter</option>
                     <option value="main">Main</option>
@@ -59,12 +62,12 @@
         </div>
         <div class="row">
             <label for="ingredients">Enter ingredients</label>
-            <div id="ingredients" name="ingredients" class="chips chips-initial"></div>
+            <div id="ingredients" name="ingredients" class="chips chips-initial validate"></div>
             <input id="ingredients-list" name="ingredients-list" type="text" style="visibility: hidden" required/>
         </div>
         <div class="row">
             <div class="input-field col s12">
-                <select name="option_amount" id="option_amount">
+                <select name="option_amount" id="option_amount" class="validate" required>
                     <option name="stepAmount" selected required>{{ counter }}</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -83,15 +86,14 @@
             
         </div>
         <div class="row">
-            <button class="btn waves-effect waves-light" type="button" sadsadsadname="action" onclick="submitForm()">Create recipe
-            <i class="material-icons right">playlist_add</i>
+            <button class="btn waves-effect waves-light" type="button" onclick="submitForm()" >Save
             </button>
         </div>
     </form> 
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
-<script>
+<script type="text/javascript">
 
 $(document).ready(function() {
     i=1;
@@ -131,27 +133,21 @@ function update_steps(){
                     <textarea id="'+ i +'" name="step" class="materialize-textarea active" data-length="300"></textarea>\
                     <label for="description">Step ' + i +'</label>\
                 </div>');
-    };
+        };
         
 }  
 
-    function submitForm() {
-        var ingredients = M.Chips.getInstance($('.chips-initial'));
-        console.log(ingredients);
-        var data = ingredients.chipsData.map(function (o) {return o.tag;}).join(",");
-        console.log(data);
-        $('#ingredients-list').val(data);
+function submitForm() {
+    var ingredients = M.Chips.getInstance($('.chips-initial'));
+    console.log(ingredients);
+    var data = ingredients.chipsData.map(function (o) {return o.tag;}).join(",");
+    console.log(data);
+    $('#ingredients-list').val(data);
 
-        var isValidForm = $('#recipe-form')[0].checkValidity();
-        if (isValidForm)
-        {
-            $('#recipe-form').submit();
-        }
-        else
-        {
-            return false;
-        }
-    }
+       
+    $('#recipe-form').submit();
+    
+}
 
 
 
