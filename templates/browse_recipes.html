@@ -50,9 +50,11 @@
       });
       bgcolor = $(this).css('backgroundColor');
       if (bgcolor == "#ffca28") {
+        $(this).blur(); 
         $(this).removeClass("lighten-2");
         $(this).addClass("darken-2");
       } else {
+        $(this).blur(); 
         $(this).removeClass("darken-2");
         $(this).addClass("lighten-2");
       }
