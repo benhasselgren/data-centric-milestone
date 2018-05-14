@@ -14,3 +14,24 @@ label {
   -o-transform: translateY(-140%);
   transform: translateY(-140%);
 }
+
+.main-buttons{
+	text-align: center;
+	margin-top: 20px;
+}
+
+.vertical-center{
+  margin-top: 30%;
+}
+
+.button-design{
+  margin: 3px;
+}
+
+.favourite_btn{
+  border-radius: 10%;
+}
+
+.logo-design-nav{
+  margin-left: 15px;
+}

@@ -1,8 +1,12 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-"""-------------------------------DB CONFIG--------------------------------"""
+"""-------------------------------DB CONFIG FOR WHEN CREATING TABLES--------------------------------"""
+
+
 #app = Flask(__name__)
 #app.config.from_pyfile('settings.cfg')
+
+##################################DATABASE DESIGN###################################
 db = SQLAlchemy();
 
 class User(db.Model):
@@ -14,6 +18,7 @@ class User(db.Model):
     password = db.Column(db.String(50), unique=False, nullable=False)
     #Relationships
     recipe = db.relationship('Recipe', backref='user', lazy=True)
+    rating = db.relationship('Rating', backref='user', lazy=True)
 
 class Recipe(db.Model):
     recipeId = db.Column(db.Integer, primary_key=True)
@@ -41,6 +46,7 @@ class Rating(db.Model):
     rating = db.Column(db.Integer, unique=False, nullable=False)
     #Foreign Key
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.recipeId'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.userId'), nullable=False)
 
 class Method(db.Model):
     methodId = db.Column(db.Integer, primary_key=True)
@@ -49,8 +55,6 @@ class Method(db.Model):
     #Foreign Key
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.recipeId'), nullable=False)
 
-    def __repr__(self):
-        return '<User %r>' % self.username
 """
 db.drop_all()
 db.create_all()

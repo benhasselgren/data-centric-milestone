@@ -1,23 +1,71 @@
 {% extends 'base.html'%}
 {% block content %}
 
+<!--##################################BROWSE QUERIED RECIPES###################################-->
 <div class="row">
 	<h3>Recipes</h3>
 </div>
 <div class="row">
-{% for recipe in recipes %}
-    <div class="col s12 m4">
-      <div class="card">
-        <div class="card-image">
-          <img src="http://cdn-image.travelandleisure.com/sites/default/files/styles/1600x1000/public/blue0517.jpg?itok=V3825voJ">
-          <span class="card-title">{{ recipe.name }}</span>
-          <a href="{{ url_for('view_recipe', username=username, recipeId= recipe.recipeId) }}" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
-        </div>
-        <div class="card-content">
-          <p>{{ recipe.description }}</p>
-        </div>
+  {% if recipes %}
+  {% for recipe in recipes %}
+  <div class="col s12 m4">
+    <div class="card">
+      <div class="card-image">
+        <img src="http://cdn-image.travelandleisure.com/sites/default/files/styles/1600x1000/public/blue0517.jpg?itok=V3825voJ">
+        <span class="card-title">{{ recipe.name }}</span>
+        <a  href="{{ url_for('view_recipe', username=username, recipeId= recipe.recipeId) }}" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+      </div>
+      <div class="card-content">
+        <p>{{ recipe.description }}</p>
+      </div>
+      <div class="card-action">
+        <a id="{{ recipe.recipeId }}" class="waves-effect waves-light btn button-design favourite_btn amber lighten-2"><i class="material-icons center">favorite</i></a>
       </div>
     </div>
+  </div>
   {% endfor %}
+  {% else %}
+  <div class="row">
+    <div class="col s12 m12 l12 ">
+      <h5>No results found</h5>
+    </div>
+  </div>
+  {% endif %}
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+    $('a.favourite_btn').click(function() {
+      var buttonpressed;
+      buttonpressed = $(this).attr('id');
+
+      $.getJSON({
+        url: '/favourite_recipe',
+        data: { recipe_id: buttonpressed, username: "{{ username }}" },
+        success: function() {
+        }
+      });
+      bgcolor = $(this).css('backgroundColor');
+      if (bgcolor == "#ffca28") {
+        $(this).removeClass("lighten-2");
+        $(this).addClass("darken-2");
+      } else {
+        $(this).removeClass("darken-2");
+        $(this).addClass("lighten-2");
+      }
+    });
+
+  });
+
+  $('a.favourite_btn').change(function() {
+
+    $(this).removeClass('lighten-1');
+    $(this).addClass('darken-3');
+  });
+
+
+</script>
 {% endblock %}

@@ -1,5 +1,6 @@
 {% extends 'base.html'%}
 {% block content %}
+<!--##################################ADD RECIPES###################################-->
 <div class="row">
     <h1>Add a recipe</h1>
 </div>
@@ -10,7 +11,7 @@
                 <input required id="name" name="name" type="text" data-length="30" class="validate">
                 <label class="active" for="name">Name</label>
             </div>
-      </div>
+        </div>
         <div class="row">
             <div class="input-field col s12">
                 <textarea id="description" name="description" class="materialize-textarea validate" required="" data-length="500" ></textarea>
@@ -78,66 +79,66 @@
                     <option value="10">10</option>
                 </select>
                 <label>Number of steps</label>
-        </div>
-        <div class="row stepFields">
-            
-        </div>
-        <div class="row input-field">
-            <button class="btn waves-effect waves-light" type="button" class="validate" onclick="submitForm()">Create recipe
-            <i class="material-icons right">playlist_add</i>
-            </button>
-        </div>
-    </form> 
-</div>
+            </div>
+            <div class="row stepFields">
+
+            </div>
+            <div class="row input-field">
+                <button class="btn waves-effect waves-light" type="button" class="validate" onclick="submitForm()">Create recipe
+                    <i class="material-icons right">playlist_add</i>
+                </button>
+            </div>
+        </form> 
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
 
     <script type="text/javascript">
-        // Class to represent a row in the seat reservations grid
 
-    $(document).ready(function() {
-        $('input#name, textarea#description, textarea#origin, textarea#step').characterCounter();
-        $('select').formSelect();
-    });
+        $(document).ready(function() {
+            $('input#name, textarea#description, textarea#origin, textarea#step').characterCounter();
+            $('select').formSelect();
+        });
 
 
-    $('.chips-initial').chips({
-        data: [{
-          tag: 'Example',
-        }, {
-          tag: 'ingredient'
-        }],
-    });
+        $('.chips-initial').chips({
+            data: [{
+              tag: 'Example',
+          }, {
+              tag: 'ingredient'
+          }],
+      });
 
-    $( "#option_amount" ).change( function() {
-        $('.stepFields').empty();
-        var limit = parseInt($("#option_amount").val());
-        console.log(limit);
-        for(var i = 1; i < limit + 1; i++){
-            $('.stepFields').append('<div class="input-field col s12">\
+        $( "#option_amount" ).change( function() {
+            $('.stepFields').empty();
+            var limit = parseInt($("#option_amount").val());
+            console.log(limit);
+            for(var i = 1; i < limit + 1; i++){
+                $('.stepFields').append('<div class="input-field col s12">\
                     <textarea id="step" name="step" class="materialize-textarea" data-length="300"></textarea>\
                     <label for="description">Step ' + i +'</label>\
-                </div>');
-        }
-    });
+                    </div>');
+            }
+        });
 
-    function submitForm() {
-        var ingredients = M.Chips.getInstance($('.chips-initial'));
-        console.log(ingredients);
-        var data = ingredients.chipsData.map(function (o) {return o.tag;}).join(",");
-        console.log(data);
-        $('#ingredients-list').val(data);
+        function submitForm() {
+            var ingredients = M.Chips.getInstance($('.chips-initial'));
+            console.log(ingredients);
+            var data = ingredients.chipsData.map(function (o) {return o.tag;}).join(",");
+            console.log(data);
+            $('#ingredients-list').val(data);
 
-        var isValidForm = $('#recipe-form')[0].checkValidity();
-        if (isValidForm)
-        {
-            $('#recipe-form').submit();
+            var isValidForm = $('#recipe-form')[0].checkValidity();
+            if (isValidForm)
+            {
+                console.log("working")
+                $('#recipe-form').submit();
+            }
+            else
+            {
+                return false;
+            }
         }
-        else
-        {
-            return false;
-        }
-    }
 
     </script>
-{% endblock %}
+    {% endblock %}

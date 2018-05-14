@@ -1,53 +1,67 @@
 {% extends 'base.html'%}
 {% block content %}
-
 <div class="row">
-	<h3>My Recipes</h3>
-</div>
-
-<div class="row">
-	<a class="waves-effect waves-light btn" href="{{ url_for('add_recipe', username=username) }}"><i class="material-icons right">add_circle</i>Add recipe</a>
-</div>
-<div class="row">
-  <a class="waves-effect waves-light btn blue" href="{{ url_for('query_recipes', username=username) }}"><i class="material-icons right">search</i>Search recipes</a>
-</div>
-
-<div class="row">
-{% for recipe in recipes %}
-    <div class="col s12 m4">
-      <div class="card">
-        <div class="card-image">
-          <img src="http://cdn-image.travelandleisure.com/sites/default/files/styles/1600x1000/public/blue0517.jpg?itok=V3825voJ">
-          <span class="card-title">{{ recipe.name }}</span>
-          <a href="{{ url_for('view_recipe', username=username, recipeId= recipe.recipeId) }}" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
-        </div>
-        <div class="card-content">
-          <p>{{ recipe.description }}</p>
-        </div>
-        <div class="card-action">
-          <a href="{{ url_for('edit_recipe', username=username, recipeId= recipe.recipeId)  }}" class="waves-effect waves-light btn green"><i class="material-icons left">border_color</i>Edit</a>
-          <a  class="waves-effect waves-light btn modal-trigger red" href="#modal1"><i class="material-icons left">cancel</i>Delete</a>
-        </div>
+  {% if recipes %}
+  <div class="row">
+    <h3>My Recipes</h3>
+  </div>
+  <div class="row main-buttons">
+    <div class="col hide-on-small-only m2 l3"></div>
+    <div class="col s12 m4 l3">
+      <a class="waves-effect waves-light btn button-design" href="{{ url_for('add_recipe', username=username) }}"><i class="material-icons right">add_circle</i>Add recipe</a>
+    </div>
+    <div class="col s12 m4 l3">
+      <a class="waves-effect waves-light btn blue button-design" href="{{ url_for('query_recipes', username=username) }}"><i class="material-icons right">search</i>Search recipes</a>
+    </div>
+    <div class="col hide-on-small-only m2 l3"></div>
+  </div>
+  {% for recipe in recipes %}
+  <div class="col s12 m6 l4">
+    <div class="card">
+      <div class="card-image">
+        <img src="http://cdn-image.travelandleisure.com/sites/default/files/styles/1600x1000/public/blue0517.jpg?itok=V3825voJ">
+        <span class="card-title">{{ recipe.name }}</span>
+        <a href="{{ url_for('view_recipe', username=username, recipeId= recipe.recipeId) }}" class="btn-floating halfway-fab waves-effect waves-light red"><i class="material-icons">add</i></a>
+      </div>
+      <div class="card-content">
+        <p>{{ recipe.description }}</p>
+      </div>
+      <div class="card-action">
+        <a href="{{ url_for('edit_recipe', username=username, recipeId= recipe.recipeId)  }}" class="waves-effect waves-light btn green button-design"><i class="material-icons center">border_color</i></a>
+        <a  class="waves-effect waves-light btn modal-trigger red button-design" href="#modal1"><i class="material-icons center">cancel</i></a>
       </div>
     </div>
-    <!--MODALS-->
+  </div>
+  <!--MODALS-->
   <!-- Modal Structure -->
-<div id="modal1" class="modal">
+  <div id="modal1" class="modal">
     <div class="modal-content">
       <h4>Are you sure you want to delete?</h4>
     </div>
     <div class="modal-footer">
-      <a href="{{ url_for('delete_recipe', username=username, recipeId= recipe.recipeId) }}" class="modal-close waves-effect waves-green btn-flat">Yes</a>
+      <a href="{{ url_for('delete_recipe', username=username, recipeId = recipe.recipeId) }}" class="modal-close waves-effect waves-green btn-flat">Yes</a>
       <a  class="modal-close waves-effect waves-green btn-flat modal-close">No</a>
     </div>
-</div>
+  </div>
   {% endfor %}
+  {% else %}
+  <div class="row valign-wrapper center-align vertical-center">
+    <div class="col hide-on-small-only m2 l3"></div>
+    <div class="col s12 m4 l3">
+      <a class="waves-effect waves-light btn button-design" href="{{ url_for('add_recipe', username=username) }}"><i class="material-icons right">add_circle</i>Add recipe</a>
+    </div>
+    <div class="col s12 m4 l3">
+      <a class="waves-effect waves-light btn blue button-design" href="{{ url_for('query_recipes', username=username) }}"><i class="material-icons right">search</i>Search recipes</a>
+    </div>
+    <div class="col hide-on-small-only m2 l3"></div>
+  </div>
+  {% endif %}
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
 <script type="">
 	$(document).ready(function(){
-    	$('.modal').modal();
-	});
+   $('.modal').modal();
+ });
 </script>
 {% endblock %}

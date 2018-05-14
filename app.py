@@ -4,7 +4,7 @@ import json
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, redirect, render_template, request, url_for
 from db import db
-from db import User, Recipe, Ingredient, Method
+from db import User, Recipe, Ingredient, Method, Rating
 import re
 import sys
 
@@ -27,6 +27,7 @@ def add_user(user_values):
 """---------------------------------Browse recipes---------------------------------"""
 
 def search_recipes(recipe):
+    rating = get_rating(1)
     cookingTime=recipe['cookingTime']
     servings=recipe['servings']
     course=recipe['course']
@@ -51,11 +52,33 @@ def search_recipes(recipe):
 
     filter_group =tuple(filters)
 
-    query = Recipe.query.join(Recipe.ingredients).filter(*filter_group).all()
+    if rating:
+        query = Recipe.query.join(Recipe.ingredients).join(Recipe.ratings).filter(*filter_group).order_by(Rating.rating.desc()).all()
+    else:
+        query = Recipe.query.join(Recipe.ingredients).filter(*filter_group).all()
+
 
 
 
     return query
+
+def favourite_recipe_add(recipeId, username):
+    user =search_for_existing(username)
+    rating = Rating.query.filter_by(user_id=user.userId).first()
+
+    if rating:
+        if rating.rating == 0:
+            rating.rating += 1
+            db.session.commit()
+        else:
+            rating.rating -= 1
+            db.session.commit()
+    else:
+        rating = Rating(rating=1, recipe_id=recipeId, user_id=user.userId)
+        db.session.add(rating)
+        db.session.commit()
+
+
  
 """--------------------------------- Add/edit recipes---------------------------------"""
 
@@ -94,9 +117,9 @@ def send_recipe(user_recipe, username):
 
     db.session.commit()
     
-def update_recipe(user_recipe, username):
+def update_recipe(user_recipe, username, recipeId):
     user = search_for_existing(username)
-    recipe = Recipe.query.filter_by(user_id = user.userId).first()
+    recipe = Recipe.query.filter_by(recipeId = recipeId).first()
     methods = Method.query.filter_by(recipe_id = recipe.recipeId).all()
     ingredients = Ingredient.query.filter_by(recipe_id = recipe.recipeId).all()
     methodNumber = 1
@@ -176,7 +199,10 @@ def search_user_ingredients(recipeId):
 def get_recipe(recipeId):
     return Recipe.query.filter_by(recipeId= recipeId).first()
 
-def delete_recipe_from_db(recipe, methods, ingredients):
+def get_rating(recipeId):
+    return Rating.query.filter_by(recipe_id= recipeId).first()
+
+def delete_recipe_from_db(recipe, methods, ingredients, rating):
 
     for method in methods:
         db.session.delete(method)
@@ -184,6 +210,9 @@ def delete_recipe_from_db(recipe, methods, ingredients):
         db.session.delete(ingredient)
 
     db.session.delete(recipe)
+
+    if rating:
+        db.session.delete(rating)
 
     db.session.commit()
 
@@ -227,21 +256,26 @@ def my_cookbook(username):
 
 @app.route('/<username>/query_recipes')
 def query_recipes(username):
-    return render_template('query_recipes.html',  username=username)
+    return render_template('query_recipes.html',  username=username, courses=["Starter", "Main", "Dessert"])
 
 @app.route('/<username>/queried_recipes',  methods=['POST'])
 def queried_recipes(username):
     if request.method == 'POST':
         recipe = request.form
+        print(recipe, file=sys.stderr)
         recipes = search_recipes(recipe)
         print(recipes, file=sys.stderr)
         return render_template('browse_recipes.html',  username=username, recipes=recipes)
 
 @app.route('/<username>/browse_recipes')
 def browse_recipes(username):
-    counter=1
-    recipes = search_recipes(username)
     return render_template('browse_recipes.html',  username=username, recipes=recipes)
+
+@app.route('/favourite_recipe', methods=['GET'])
+def favourite_recipe():
+    recipeId = request.args.get('recipe_id')
+    username = request.args.get('username')
+    favourite_recipe_add(recipeId, username)
 
 @app.route('/<username>/<recipeId>/view_recipe')
 def view_recipe(username, recipeId):
@@ -254,9 +288,10 @@ def view_recipe(username, recipeId):
 @app.route('/<username>/<recipeId>/delete_recipe')
 def delete_recipe(username, recipeId):
     recipe = get_recipe(recipeId)
+    rating = get_rating(recipeId)
     methods = search_user_methods(recipeId)
     ingredients = search_user_ingredients(recipeId)
-    delete_recipe_from_db(recipe, methods, ingredients)
+    delete_recipe_from_db(recipe, methods, ingredients, rating)
     return redirect('my_cookbook/%s'% username)
 
 @app.route('/<username>/add_recipe')
@@ -280,11 +315,12 @@ def edit_recipe(username, recipeId):
         counter += 1
     return render_template('edit_recipe.html', username=username, recipe=recipe, methods=methods, ingredients=ingredients, counter=counter)
 
-@app.route('/<username>/edit_recipe/recipe_updated', methods=['POST'])
-def recipe_updated(username):
+@app.route('/<username>/<recipeId>/edit_recipe/recipe_updated', methods=['POST'])
+def recipe_updated(username, recipeId):
     if request.method == 'POST':
         recipe = request.form
-        update_recipe(recipe, username)
+        print("hi", file=sys.stderr)
+        update_recipe(recipe, username, recipeId)
         return redirect('my_cookbook/%s'% username) 
 
 if __name__ == '__main__':

@@ -4,152 +4,160 @@
     <h1>Edit recipe</h1>
 </div>
 
+<!--##################################EDIT USER RECIPES###################################-->
 <h2>Recipe</h2>
 <div class="col s12">
-    <form class="col s12" action="{{ url_for('recipe_updated', username=username, recipeId=recipeId) }}" method='POST' id='recipe_form'>
+    <form class="col s12" action="{{ url_for('recipe_updated', username=username, recipeId=recipe.recipeId) }}" method='POST' id='recipe-form'>
         <div class="row">
             <div class="input-field col s12">
-                <input value="{{ recipe.name }}" id="name" name="name" type="text" class="validate" data-length="30" required/>
+                <input value="{{ recipe.name }}" id="name" name="name" type="text" class="validate" data-length="30" />
                 <label class="active" for="name">Name</label>
             </div>
-      </div>
+        </div>
         <div class="row">
             <div class="input-field col s12">
-                <textarea  id="description" name="description" class="materialize-textarea validate" data-length="500" required></textarea>
+                <textarea  id="description" name="description" class="materialize-textarea validate" data-length="500" ></textarea>
                 <label for="description">Description</label>
             </div>
         </div>
         <div class="row">
-        <div class="row">
-            <p class="range-field">
-                <label for="cookingTime">Cooking time <strong>(minutes)</strong></label>
-                <input   value ="{{ recipe.cookingtime }}"id="cookingTime" name="cookingtime" type="range" min="0" max="300"  class="validate"required/>
-            </p>
-        </div>
-        <div class="row">
-            <div class="input-field col s12">
-                <select name="servings" class="validate" required>
-                    <option selected>{{ recipe.servings }}</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                </select>
-                <label>How many does it serve</label>
+            <div class="row">
+                <p class="range-field">
+                    <label for="cookingTime">Cooking time <strong>(minutes)</strong></label>
+                    <input   value ="{{ recipe.cookingtime }}"id="cookingTime" name="cookingtime" type="range" min="0" max="300"  class="validate" />
+                </p>
             </div>
-        </div>
-        <div class="row">
-            <div class="input-field col s12">
-                <select name="course" class="validate" required>
-                    <option selected>{{ recipe.course.capitalize() }}</option>
-                    <option value="starter">Starter</option>
-                    <option value="main">Main</option>
-                    <option value="dessert">Dessert</option>
-                </select>
-                <label>Type of course</label>
+            <div class="row">
+                <div class="input-field col s12">
+                    <select name="servings" class="validate" >
+                        <option selected>{{ recipe.servings }}</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                    </select>
+                    <label>How many does it serve</label>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="input-field col s12">
-                <input value="{{ recipe.countryOfOrigin }}" id="origin" name="origin" type="text" class="validate" data-length="30" required/>
-                <label for="origin">Country of origin</label>
+            <div class="row">
+                <div class="input-field col s12">
+                    <select name="course" class="validate" >
+                        <option selected>{{ recipe.course.capitalize() }}</option>
+                        <option value="starter">Starter</option>
+                        <option value="main">Main</option>
+                        <option value="dessert">Dessert</option>
+                    </select>
+                    <label>Type of course</label>
+                </div>
             </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <input value="{{ recipe.countryOfOrigin }}" id="origin" name="origin" type="text" class="validate" data-length="30" />
+                    <label for="origin">Country of origin</label>
+                </div>
+            </div>
+            <div class="row">
+                <label for="ingredients">Enter ingredients</label>
+                <div id="ingredients" name="ingredients" class="chips chips-initial validate"></div>
+                <input id="ingredients-list" name="ingredients-list" type="text" style="visibility: hidden" />
+            </div>
+            <div class="row">
+                <div class="input-field col s12">
+                    <select name="option_amount" id="option_amount" class="validate" >
+                        <option name="stepAmount" selected >{{ counter }}</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                    <label>Number of steps</label>
+                </div>
+                <div class="row stepFields">
+
+                </div>
+                <div class="row">
+                    <button class="btn waves-effect waves-light" type="button" onclick="submitForm()" >Save
+                    </button>
+                </div>
+            </form> 
         </div>
-        <div class="row">
-            <label for="ingredients">Enter ingredients</label>
-            <div id="ingredients" name="ingredients" class="chips chips-initial validate"></div>
-            <input id="ingredients-list" name="ingredients-list" type="text" style="visibility: hidden" required/>
-        </div>
-        <div class="row">
-            <div class="input-field col s12">
-                <select name="option_amount" id="option_amount" class="validate" required>
-                    <option name="stepAmount" selected required>{{ counter }}</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                </select>
-                <label>Number of steps</label>
-        </div>
-        <div class="row stepFields">
-            
-        </div>
-        <div class="row">
-            <button class="btn waves-effect waves-light" type="button" onclick="submitForm()" >Save
-            </button>
-        </div>
-    </form> 
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
-<script type="text/javascript">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+        <script type="text/javascript">
 
-$(document).ready(function() {
-    i=1;
-    $('select').formSelect();
-    $("textarea#description").val('{{ recipe.description }}');
-    $('input#name, textarea#description, textarea#origin, textarea#step').characterCounter();
-    update_steps();
-    {% for method in methods %}
-    $('#{{ method.stepNumber }}').val('{{ method.description }}');
-    i ++;
-    {% endfor %}
-    setTimeout(function(){ $('.input-field label').addClass('active'); }, 1);
-        
-});
+            $(document).ready(function() {
+                i=1;
+                $('select').formSelect();
+                $("textarea#description").val('{{ recipe.description }}');
+                $('input#name, textarea#description, textarea#origin, textarea#step').characterCounter();
+                update_steps();
+                {% for method in methods %}
+                $('#{{ method.stepNumber }}').val('{{ method.description }}');
+                i ++;
+                {% endfor %}
+                setTimeout(function(){ $('.input-field label').addClass('active'); }, 1);
 
-$( "#option_amount" ).change( function() {
-    update_steps();
+            });
 
-});
+            $( "#option_amount" ).change( function() {
+                update_steps();
 
-$('.chips-initial').chips({
-        data: [
-        {% for ingredient in ingredients %}
-        {
-          tag: "{{ ingredient.name }}",
-        },
-        {% endfor %}
-        ],
-});
-      
-function update_steps(){
-    $('.stepFields').empty();
-        var limit = parseInt($("#option_amount").val());
-        console.log(limit);
-        for(var i = 1; i < limit + 1; i++){
-            $('.stepFields').append('<div class="input-field col s12">\
-                    <textarea id="'+ i +'" name="step" class="materialize-textarea active" data-length="300"></textarea>\
-                    <label for="description">Step ' + i +'</label>\
-                </div>');
-        };
-        
-}  
+            });
 
-function submitForm() {
-    var ingredients = M.Chips.getInstance($('.chips-initial'));
-    console.log(ingredients);
-    var data = ingredients.chipsData.map(function (o) {return o.tag;}).join(",");
-    console.log(data);
-    $('#ingredients-list').val(data);
+            $('.chips-initial').chips({
+                data: [
+                {% for ingredient in ingredients %}
+                {
+                  tag: "{{ ingredient.name }}",
+              },
+              {% endfor %}
+              ],
+            });
 
-       
-    $('#recipe-form').submit();
-    
-}
+            function update_steps(){
+                $('.stepFields').empty();
+                var limit = parseInt($("#option_amount").val());
+                console.log(limit);
+                for(var i = 1; i < limit + 1; i++){
+                    $('.stepFields').append('<div class="input-field col s12">\
+                        <textarea id="'+ i +'" name="step" class="materialize-textarea active" data-length="300"></textarea>\
+                        <label for="description">Step ' + i +'</label>\
+                        </div>');
+                };
+
+            }  
+
+            function submitForm() {
+                var ingredients = M.Chips.getInstance($('.chips-initial'));
+                console.log(ingredients);
+                var data = ingredients.chipsData.map(function (o) {return o.tag;}).join(",");
+                console.log(data);
+                $('#ingredients-list').val(data);
+
+                var isValidForm = $('#recipe-form')[0].checkValidity();
+                if (isValidForm)
+                {
+                    $('#recipe-form').submit();
+                }
+                else
+                {
+                    return false;
+                }
+
+            }
 
 
 
-</script>
-{% endblock %}
+        </script>
+        {% endblock %}
