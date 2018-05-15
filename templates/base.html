@@ -12,6 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dc.min.css') }}" type="text/css" />
 
 
     <title>Document</title>
@@ -24,6 +25,7 @@
         <li><a href="{{ url_for('my_cookbook', username=username) }}">Home</a></li>
         <li><a href="{{ url_for('query_recipes', username=username) }}">Search recipes</a></li>
         <li><a href="{{ url_for('add_recipe', username=username) }}">Add recipes</a></li>
+        <li><a href="{{ url_for('recipe_stats', username=username) }}">Statistics</a></li>
         <li><a class="waves-effect waves-light btn blue " href="{{ url_for('index') }}">Log out</a></li>
     </ul>
     <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
@@ -34,6 +36,7 @@
     <li><a href="{{ url_for('my_cookbook', username=username) }}">Home</a></li>
     <li><a href="{{ url_for('query_recipes', username=username) }}">Search recipes</a></li>
     <li><a href="{{ url_for('add_recipe', username=username) }}">Add recipes</a></li>
+    <li><a href="{{ url_for('recipe_stats', username=username) }}">Statistics</a></li>
     <li><a href="{{ url_for('index') }}">Log out</a></li>
 </ul>
 </nav>

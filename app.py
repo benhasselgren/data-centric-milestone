@@ -2,9 +2,10 @@ import os
 #import myenviron
 import json
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, redirect, render_template, request, url_for, Response
 from db import db
 from db import User, Recipe, Ingredient, Method, Rating
+import csv
 import re
 import sys
 
@@ -13,6 +14,14 @@ app = Flask(__name__)
 app.config.from_pyfile('settings.cfg')
 db.init_app(app)
 """---------------------------------FUNCTIONS TO BE MOVED INTO CLASSES IN SEPERATE FILES---------------------------------"""
+def export():
+    recipes = Recipe.query.all()
+    with open('static/export_recipes.csv', 'w') as csvfile:
+        writer = csv.writer(csvfile, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
+        writer.writerow(["Name", "Description", "Cookingtime", "Servings", "Course", "CountryOfOrigin"])
+        for recipe in recipes:
+            writer.writerow([recipe.name, recipe.description, recipe.cookingtime, recipe.servings, recipe.course, recipe.countryOfOrigin])
+
 
 """---------------------------------Users---------------------------------"""
 def add_user(user_values):
@@ -318,9 +327,15 @@ def edit_recipe(username, recipeId):
 def recipe_updated(username, recipeId):
     if request.method == 'POST':
         recipe = request.form
-        print("hi", file=sys.stderr)
+        
         update_recipe(recipe, username, recipeId)
         return redirect('my_cookbook/%s'% username) 
+
+@app.route('/<username>/recipe_stats')
+def recipe_stats(username):
+    export()
+    print("hi", file=sys.stderr)
+    return render_template('recipe_stats.html', username=username)
 
 if __name__ == '__main__':
     app.run(host=os.getenv('IP'), port = os.getenv('PORT'), debug=True)

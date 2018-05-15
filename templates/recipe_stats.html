@@ -1,0 +1,104 @@
+{% extends 'base.html'%}
+{% block content %}
+<div class="row">
+  <div class="row">
+    <h3>Statistics</h3>
+  </div>
+  <div class="row">
+    <div class="col s12 m6 l6 offset-m3">
+      <div id="course-balance">
+
+      </div>
+    </div>
+    <div class="col s12 m6 l6 offset-m3">
+      <div id="servings-balance">
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col s12 m6 l6 offset-l3 offset-m3">
+    <div id="country-origin-balance">
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/d3.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/crossfilter.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/dc.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/queue.min.js') }}"></script>
+<script type="">
+  queue()
+  .defer(d3.csv, "{{ url_for('static', filename='export_recipes.csv') }}")
+  .await(makeGraphs);
+
+  function makeGraphs(error, recipeData) {
+    var ndx = crossfilter(recipeData);
+
+    recipeData.forEach(function(d) {
+      d.Cookingtime = parseInt(d.Cookingtime);
+      d.servings = parseInt(d.Servings);
+    })
+
+    show_gender_balance(ndx);
+    show_servings_balance(ndx);
+    show_country_origin_balance(ndx);
+
+    dc.renderAll();
+  }
+
+  function show_gender_balance(ndx) {
+    var dim = ndx.dimension(dc.pluck('Course'));
+    var group = dim.group();
+
+    dc.barChart("#course-balance")
+    .width(350)
+    .height(250)
+    .margins({ top: 10, right: 50, bottom: 30, left: 50 })
+    .dimension(dim)
+    .group(group)
+    .transitionDuration(500)
+    .x(d3.scale.ordinal())
+    .xUnits(dc.units.ordinal)
+    .xAxisLabel("Course")
+    .yAxis().ticks(30);
+  }
+
+  function show_servings_balance(ndx) {
+    var dim = ndx.dimension(dc.pluck('Servings'));
+    var group = dim.group();
+
+    dc.barChart("#servings-balance")
+    .width(350)
+    .height(250)
+    .margins({ top: 10, right: 50, bottom: 30, left: 50 })
+    .dimension(dim)
+    .group(group)
+    .transitionDuration(500)
+    .x(d3.scale.ordinal())
+    .xUnits(dc.units.ordinal)
+    .xAxisLabel("Servings")
+    .yAxis().ticks(20);
+  }
+
+  function show_country_origin_balance(ndx) {
+    var dim = ndx.dimension(dc.pluck('CountryOfOrigin'));
+    var group = dim.group();
+
+    dc.barChart("#country-origin-balance")
+    .width(350)
+    .height(250)
+    .margins({ top: 10, right: 50, bottom: 30, left: 50 })
+    .dimension(dim)
+    .group(group)
+    .transitionDuration(500)
+    .x(d3.scale.ordinal())
+    .xUnits(dc.units.ordinal)
+    .xAxisLabel("Country of origin")
+    .yAxis().ticks(20);
+  }
+</script>
+
+{% endblock %}
