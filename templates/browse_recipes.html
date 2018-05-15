@@ -19,7 +19,7 @@
         <p>{{ recipe.description }}</p>
       </div>
       <div class="card-action">
-        <a id="{{ recipe.recipeId }}" class="waves-effect waves-light btn button-design favourite_btn amber lighten-2"><i class="material-icons center">favorite</i></a>
+        <a id="{{ recipe.recipeId }}" class="waves-effect waves-light btn button-design favourite-btn amber lighten-2"><i class="material-icons center">favorite</i></a>
       </div>
     </div>
   </div>
@@ -38,34 +38,22 @@
 <script type="text/javascript">
 
   $(document).ready(function() {
-    $('a.favourite_btn').click(function() {
+    $('a.favourite-btn').click(function() {
       var buttonpressed;
       buttonpressed = $(this).attr('id');
-
+      $(this).removeClass("lighten-2");
+      $(this).addClass("darken-2");
       $.getJSON({
         url: '/favourite_recipe',
         data: { recipe_id: buttonpressed, username: "{{ username }}" },
         success: function() {
         }
       });
-      bgcolor = $(this).css('backgroundColor');
-      if (bgcolor == "#ffca28") {
-        $(this).blur(); 
-        $(this).removeClass("lighten-2");
-        $(this).addClass("darken-2");
-      } else {
-        $(this).blur(); 
-        $(this).removeClass("darken-2");
-        $(this).addClass("lighten-2");
-      }
+
     });
 
-  });
 
-  $('a.favourite_btn').change(function() {
 
-    $(this).removeClass('lighten-1');
-    $(this).addClass('darken-3');
   });
 
 

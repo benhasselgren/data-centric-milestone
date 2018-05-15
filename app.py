@@ -262,9 +262,8 @@ def query_recipes(username):
 def queried_recipes(username):
     if request.method == 'POST':
         recipe = request.form
-        print(recipe, file=sys.stderr)
         recipes = search_recipes(recipe)
-        print(recipes, file=sys.stderr)
+        user = search_for_existing(username)
         return render_template('browse_recipes.html',  username=username, recipes=recipes)
 
 @app.route('/<username>/browse_recipes')
