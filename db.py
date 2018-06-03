@@ -3,11 +3,11 @@ from flask_sqlalchemy import SQLAlchemy
 """-------------------------------DB CONFIG FOR WHEN CREATING TABLES--------------------------------"""
 
 
-app = Flask(__name__)
-app.config.from_pyfile('settings.cfg')
+#app = Flask(__name__)
+#app.config.from_pyfile('settings.cfg')
 
 ##################################DATABASE DESIGN###################################
-db = SQLAlchemy(app);
+db = SQLAlchemy();
 
 class User(db.Model):
     userId = db.Column(db.Integer, primary_key=True)
@@ -55,7 +55,7 @@ class Method(db.Model):
     #Foreign Key
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.recipeId'), nullable=False)
 
-
+"""
 db.drop_all()
 db.create_all()
 admin = User(
@@ -69,3 +69,4 @@ db.session.add(admin)
 db.session.commit()
 
 
+"""
