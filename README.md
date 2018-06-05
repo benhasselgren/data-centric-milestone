@@ -33,6 +33,5 @@
     to test if there was anything wrong with my html, css or javascript files. I also made use of flasks/jinja's error page that appeared when my code had errors in it. This helped me spot things wrong in my code quickly.
 </p>
 <p>
-    The website used code from google maps api documentation to create the initial structure of the website. The code was then added to 
-    to make it more functional and match it to the specifiction.
+    This website was deployed to heroku. I created a heroku app and then pushed my code to it. To ensure it worked I had to add some config variables on the heroku dashboard. I then had to add a procfile and a reuiqrments.txt file so heroku would know how to set up my app. The main issue with deploying my data was migrating all the data from the database to heroku. I didn't want to migrate to postgres in this project so I found a heroku resource called ClearDB. It is basically what heroku uses to store mysql databases. It was easy to migrate. I copied my cleardb config value I was given and placed it in an environment variable in my local code. This then migrated my current, local mysql database to the cleardb one on heroku.
 </p>
