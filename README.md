@@ -22,7 +22,7 @@
 </p>
 
 <p> 
-    All this data created by the useris kept in a database. The database was set up using mysql. To then create tables, mysqlalchemy-flask was installed. Rather than writing sql, I instead was able to to write python code. Each table was represented by a class. This made it far easier to query, delete, add and update all the
+    All this data created by the useris kept in a database. The database was set up using mysql. I firest created a database schema which is where I identified the strucure and relationships of my tables. I started by creating a user table. I then added a recipe table which used the user id aas a foreign key. I then added an ingredient table and method table that used the recipe id of the relevant recipe as a foreign key. I then added a rating table which used the recipe id of a relevant recipe as a foreign key. If i were to do this again, I owuld have used the user id as another foreign key. This would have allowed me to reutrn users liked reciped and display them in their profile or also tell the user if they had already liked a recipe, etc. To then create tables, mysqlalchemy-flask was installed. Rather than writing sql, I instead was able to to write python code. Each table was represented by a class. This made it far easier to query, delete, add and update all the
     data in the database. 
 </p>
 
