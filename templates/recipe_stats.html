@@ -5,21 +5,19 @@
     <h3>Statistics</h3>
   </div>
   <div class="row">
-    <div class="col s12 m6 l6 offset-m3">
+    <div class="col s12 m6 l6 xl4 offset-m3">
       <div id="course-balance">
 
       </div>
     </div>
-    <div class="col s12 m6 l6 offset-m3">
+    <div class="col s12 m6 l6 xl4 offset-m3">
       <div id="servings-balance">
 
       </div>
     </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col s12 m6 l6 offset-l3 offset-m3">
-    <div id="country-origin-balance">
+    <div class="col s12 m6 l6 xl4 offset-m3">
+      <div id="country-origin-balance">
+      </div>
     </div>
   </div>
 </div>
@@ -63,7 +61,7 @@
     .x(d3.scale.ordinal())
     .xUnits(dc.units.ordinal)
     .xAxisLabel("Course")
-    .yAxis().ticks(30);
+    .yAxis().ticks(2);
   }
 
   function show_servings_balance(ndx) {
@@ -80,7 +78,7 @@
     .x(d3.scale.ordinal())
     .xUnits(dc.units.ordinal)
     .xAxisLabel("Servings")
-    .yAxis().ticks(20);
+    .yAxis().ticks(2);
   }
 
   function show_country_origin_balance(ndx) {
@@ -97,7 +95,7 @@
     .x(d3.scale.ordinal())
     .xUnits(dc.units.ordinal)
     .xAxisLabel("Country of origin")
-    .yAxis().ticks(20);
+    .yAxis().ticks(2);
   }
 </script>
 
