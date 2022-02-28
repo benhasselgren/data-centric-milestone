@@ -1,7 +1,7 @@
 <h6>Ben Hasselgren</h6>
 <h1> Data Centric Milestone Project  </h1>
 
-<a href="https://data-centric-dev-milestone.herokuapp.com/" target="_blank"> Click here to view website</a>
+<a href="" target="_blank"> Click here to view website <span>Site currently unavailable</span></a>
 
 <h3>Purpose</h3>
 <p>
