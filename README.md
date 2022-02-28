@@ -1,7 +1,7 @@
 <h6>Ben Hasselgren</h6>
 <h1> Data Centric Milestone Project  </h1>
 
-<a href="" target="_blank"> Click here to view website <span>Site currently unavailable</span></a>
+<a href="" target="_blank"><span>Site currently unavailable</span></a>
 
 <h3>Purpose</h3>
 <p>
